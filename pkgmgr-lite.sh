@@ -94,12 +94,14 @@ elif [ "$1" == "-i" -o "$1" == "--install" ]; then
          cp $2 $infldr/$2
          echo alias "$2"="$infldr/$2" >> ~/.bashrc
          echo "$2 installed sucessfully!"
-      elif [ -f "$2.bin" ]; then
-         cp $2.bin $infldr/$2
-         echo alias "$2"="$infldr/$2" >> ~/.bashrc
-         echo "$2 installed sucessfully!"
-      elif [ -f "$2.sh" ]; then
-         cp $2.sh $infldr/$2
+      elif [ -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
+         if [ -f "$2.bin" ]; then
+            cp $2.bin $infldr/$2
+         elif [ -f "$2.sh" ]; then
+            cp $2.sh $infldr/$2
+         elif [ -f "$2.py" ]; then
+            cp $2.py $infldr/$2
+         fi
          echo alias "$2"="$infldr/$2" >> ~/.bashrc
          echo "$2 installed sucessfully!"
       elif [ -f "configure" -o -f "Makefile" ]; then
