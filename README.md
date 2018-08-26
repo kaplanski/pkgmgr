@@ -10,7 +10,8 @@ Features:
 
 Known issues:
 - no list/database of installed packages  
-- repo index files are plain-text, not database files
+- repo index files are plain-text, not database files  
+- no dependecy checks
 
 Planned:
 - .deb support  
