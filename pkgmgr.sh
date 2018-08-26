@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#pkgmgr version 0.1 - Copyright 2018 Jan-Daniel Kaplanski
+#pkgmgr version 0.1a - Copyright 2018 Jan-Daniel Kaplanski
 #
 #                            Help on Parameters
 #mk
@@ -78,7 +78,7 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
    fi
 
    if [ "$1" == "" ]; then
-      echo "pkgmgr 0.1 - by Jan-Daniel Kaplanski"
+      echo "pkgmgr 0.1a - by Jan-Daniel Kaplanski"
       echo "try '$0 -h' for help"
    elif [ "$1" == "-h" -o "$1" == "--help" ]; then
       echo "Usage: pkgmgr [-c|-h|-i|-r|-s|-u] [pkg]"
@@ -138,6 +138,9 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
             echo "$2 installed sucessfully!"
          elif [ -f "$2.bin" ]; then
             cp $2.bin $infldr/$2
+            echo "$2 installed sucessfully!"
+         elif [ -f "$2.sh" ]; then
+            cp $2.sh $infldr/$2
             echo "$2 installed sucessfully!"
          elif [ -f "configure" -o -f "Makefile" ]; then
             if [ -f "$mkloc/$mk" -o -f "/bin/$mk" -o -f "/usr/bin/$mk" ]; then
