@@ -109,6 +109,9 @@ elif [ "$1" == "-i" -o "$1" == "--install" ]; then
       else
          echo "No known methode to install package $2! Aborted!"
       fi
+      if [ -f "$2-install.sh" ]; then
+         ./$2-install.sh $pkgfldr $infldr $2
+      fi
       if [ -f "$2-display.txt" ]; then
          cat "$2-display.txt"
       fi
