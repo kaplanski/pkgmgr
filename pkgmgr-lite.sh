@@ -98,6 +98,10 @@ elif [ "$1" == "-i" -o "$1" == "--install" ]; then
          cp $2.bin $infldr/$2
          echo alias "$2"="$infldr/$2" >> ~/.bashrc
          echo "$2 installed sucessfully!"
+      elif [ -f "$2.sh" ]; then
+         cp $2.sh $infldr/$2
+         echo alias "$2"="$infldr/$2" >> ~/.bashrc
+         echo "$2 installed sucessfully!"
       elif [ -f "configure" -o -f "Makefile" ]; then
          echo "$2 is not supported by the lite version of pkgmgr."
       else
