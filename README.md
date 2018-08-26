@@ -4,7 +4,7 @@ pkgmgr uses standard tools like the bash interpreter, cp and wget combined with
 simple if-statements to give the user a full-blown package manager in return.
 
 Features:
-- can install precompiled binary packages (tar-gz format)  
+- can install precompiled binary packages, .sh and .py scrips (tar-gz format)  
 - can install source-code using GNU make (tar-gz format)  
 - easy to adopt other formats/package layouts
 
