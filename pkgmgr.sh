@@ -166,10 +166,13 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
          else
             echo "No known methode to install package $2! Aborted!"
          fi
-      if [ -f "$2-display.txt" ]; then
-         cat "$2-display.txt"
-      fi
-      cd .. && rm -rf $2
+         if [ -f "$2-install.sh" ]; then
+            ./$2-install.sh $pkgfldr $infldr $2
+         fi
+         if [ -f "$2-display.txt" ]; then
+            cat "$2-display.txt"
+         fi
+         cd .. && rm -rf $2
       fi
    fi
 else
