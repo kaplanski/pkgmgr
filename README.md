@@ -17,4 +17,9 @@ Planned:
 - .deb support  
 - [DONE] a lite version (dev-options and make removed, usable without root access)
 
+Package structure for testbinary.tgz:
+- testbinary.bin (binary or script with no ending or .bin, .sh or .py)  
+- OPTIONAL: testbinary-display.txt (Message to be shown after install has completed)  
+- OPTIONAL: testbinary-install.sh (instuctions other than to copy the binary, e.g. for libaries instead)
+
 **This project has tee-making abilities!**
