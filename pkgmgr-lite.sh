@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#pkgmgr version 0.1L - Copyright 2018 Jan-Daniel Kaplanski
+#pkgmgr version 0.1aL - Copyright 2018 Jan-Daniel Kaplanski
 #based on pkgmgr version 0.1a
 #
 #                            Help on Parameters
@@ -92,12 +92,14 @@ elif [ "$1" == "-i" -o "$1" == "--install" ]; then
       echo "Installing $2..."
       if [ -f "$2" ]; then
          cp $2 $infldr/$2
+         echo alias "$2"="$infldr/$2" >> ~/.bashrc
          echo "$2 installed sucessfully!"
       elif [ -f "$2.bin" ]; then
          cp $2.bin $infldr/$2
+         echo alias "$2"="$infldr/$2" >> ~/.bashrc
          echo "$2 installed sucessfully!"
       elif [ -f "configure" -o -f "Makefile" ]; then
-         echo "$2 is not supported by the light version of the installer."
+         echo "$2 is not supported by the lite version of pkgmgr."
       else
          echo "No known methode to install package $2! Aborted!"
       fi
