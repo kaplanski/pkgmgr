@@ -2,3 +2,4 @@ copy
 del
 move
 nano
+testbinary
