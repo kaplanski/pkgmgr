@@ -1,5 +1,10 @@
 # pkgmgr - a package manager written in bash
 
+**development SUSPENDED**  
+Due to active development on 'DBISshit!' this project is halted!  
+An adaptation of the 'DBISshit!'-Format DB is planned for repo index files.  
+Until 'DBISshit!' has got a non-interactive version this project (pkgmgr) will remain halted!  
+
 pkgmgr uses standard tools like the bash interpreter, cp and wget combined with  
 simple if-statements to give the user a full-blown package manager in return.
 
@@ -15,7 +20,8 @@ Known issues:
 
 Planned:
 - .deb support  
-- [DONE] a lite version (dev-options and make removed, usable without root access)
+- [DONE] a lite version (dev-options and make removed, usable without root access)  
+- usage of 'DBISshit!' for repo index files
 
 Package structure for testbinary.tgz:
 - testbinary.bin (binary or script with no ending or .bin, .sh or .py)  
