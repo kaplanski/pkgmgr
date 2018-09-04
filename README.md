@@ -1,6 +1,6 @@
 # pkgmgr - a package manager written in bash
 
-pkgmgr uses standard tools like the bash interpreter, cp and wget combined with  
+**pkgmgr** uses standard tools like the bash interpreter, cp and wget combined with  
 simple if-statements to give the user a full-blown package manager in return.
 
 *Features:*
