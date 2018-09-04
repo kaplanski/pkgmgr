@@ -39,11 +39,11 @@ fi
 
 if [ ! -f $pkgfldr/installed_$arch.db ]; then
    echo "[PKGID:Name:Version]" > $pkgfldr/installed_$arch.db
-   echo "Initial installed.db created!"
+   echo "Initial installed_$arch.db created!"
 fi
 
 if [ ! -f $pkgfldr/index_$arch.db ]; then
-   echo "Initial package index download..."
+   echo "Initial package index download for $arch..."
    echo "Using online repo $repo"
    cd $pkgfldr && wget -q -t 1 $repo/$arch/index.db -O index_$arch.db
    echo "Done!"
@@ -53,8 +53,10 @@ if [ "$1" == "" ]; then
    echo "pkgmgr 0.1cL - by Jan-Daniel Kaplanski"
    echo "try '$0 -h' for help"
 elif [ "$1" == "-h" -o "$1" == "--help" ]; then
-   echo "Usage: pkgmgr [-c|-h|-i|-r|-s|-u] [pkg]"
+   echo "Usage: pkgmgr [-c|-da|-di|-h|-i|-r|-s|-u] [pkg]"
    echo "   -c: (--clean) cleans the package folder of downloaded packages"
+   echo "  -da: (--displayall) list all available packages for $arch"
+   echo "  -di: (--displayinstalled) list all installed packages for $arch"
    echo "   -h: (--help) displays this help"
    echo "   -u: (--update) updates the package index"
    echo "   -i [pkg]: (--install) installs a package"
@@ -74,6 +76,12 @@ elif [ "$1" == "-s" -o "$1" == "--search" ]; then
    else
       grep "$2" $pkgfldr/index_$arch.db | cut -d: -f2
    fi
+elif [ "$1" == "-da" -o "$1" == "--displayall" ]; then
+   echo "Available packages for $arch:"
+   grep { $pkgfldr/index_$arch.db | cut -d: -f2
+elif [ "$1" == "-di" -o "$1" == "--displayinstalled" ]; then
+   echo "Installed packages for $arch:"
+   grep { $pkgfldr/installed_$arch.db | cut -d: -f2
 elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
    if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" ==  "$2" -a -d "$infldr/$2" ]; then
       rm -rf $infldr/$2
