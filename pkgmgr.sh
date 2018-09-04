@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#pkgmgr version 0.1a - Copyright 2018 Jan-Daniel Kaplanski
+#pkgmgr version 0.1b - Copyright 2018 Jan-Daniel Kaplanski
 #
 #                            Help on Parameters
 #mk
@@ -25,7 +25,7 @@
 #   ---DEVELOPMENT ONLY---
 #arch
 #   your PC's architecture
-#   currently supported: i386, amd64
+#   currently supported: i386, amd64, python2, python3
 #usr
 #   default: $USER (system user identifier)
 #   set to "Devloc" to disable "make install" (which needs root)
@@ -33,23 +33,23 @@
 #   be smart and set pkgfldr and infldr to where you have rwx permission while using Devloc
 
 #Release defaults
-mk=make
-mkloc=
-infldr=/usr/bin
-pkgfldr=/etc/pkgmgr
-repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
-arch=i386
-usr=$USER
-
-#Dev defaults
 #mk=make
 #mkloc=
-#infldr=$PWD/installed
-#pkgfldr=$PWD/pkgmgr
-#repo=
-#repoloc=$PWD/repo
+#infldr=/usr/bin
+#pkgfldr=/etc/pkgmgr
+#repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
 #arch=i386
 #usr=$USER
+
+#Dev defaults
+mk=make
+mkloc=
+infldr=$PWD/installed
+pkgfldr=$PWD/pkgmgr
+#repo=
+repoloc=$PWD/repo
+arch=i386
+usr=$USER
 
 if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
    if [ ! -d $pkgfldr ]; then
@@ -57,14 +57,14 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
       echo "Initial pkgfolder created!"
    fi
 
-   if [ ! -f $pkgfldr/index.txt ]; then
+   if [ ! -f $pkgfldr/index.db ]; then
       echo "Initial package index download..."
-      if [ $repo ]; then
+      if [ "$repo" != "" ]; then
          echo "Using online repo $repo"
-         cd $pkgfldr && wget -t=1 $repo/$arch/index.txt
-      elif [ $repoloc ]; then
+         cd $pkgfldr && wget -t=1 $repo/$arch/index.db
+      elif [ "$repoloc" != "" ]; then
          echo "Using local repo $repoloc"
-         dd if=$repoloc/$arch/index.txt of=$pkgfldr/index.txt
+         dd if=$repoloc/$arch/index.db of=$pkgfldr/index.db
       fi
       echo "Done!"
    fi
@@ -78,7 +78,7 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
    fi
 
    if [ "$1" == "" ]; then
-      echo "pkgmgr 0.1a - by Jan-Daniel Kaplanski"
+      echo "pkgmgr 0.1b - by Jan-Daniel Kaplanski"
       echo "try '$0 -h' for help"
    elif [ "$1" == "-h" -o "$1" == "--help" ]; then
       echo "Usage: pkgmgr [-c|-h|-i|-r|-s|-u] [pkg]"
@@ -94,16 +94,17 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
       echo "Updating package index..."
       if [ $repo ]; then
          echo "Using online repo $repo"
-         cd $pkgfldr && wget -t=1 $repo/$arch/index.txt -O index.txt
+         cd $pkgfldr && wget -t=1 $repo/$arch/index.db -O index.db
       elif [ $repoloc ]; then
          echo "Using local repo $repoloc"
-         dd if=$repoloc/$arch/index.txt of=$pkgfldr/index.txt
+         dd if=$repoloc/$arch/index.db of=$pkgfldr/index.db
       fi
       echo "Done!"
    elif [ "$1" == "-s" -o "$1" == "--search" ]; then
-      cat $pkgfldr/index.txt | grep $2; isitin=$?
-      if [ "$isitin" != "0" ]; then
-         echo "Package $2 not found!"
+      if [ "$2" == "" ]; then
+         echo "Empty request!"
+      else
+         grep "$2" "$pkgfldr"/index.db | cut -d: -f2
       fi
    elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
       if [ -f "$infldr/$2" ]; then
@@ -113,7 +114,7 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
          echo "Package $2 not installed! Aborted!"
       fi
    elif [ "$1" == "-c" -o "$1" == "--clean" ]; then
-      echo "Removing any downloaded packages..."
+      echo "Removing any downloaded packages from cache..."
       cd $pkgfldr && rm -rf *.tgz 2>/dev/null
       echo "Done!"
    elif [ "$1" == "-i" -o "$1" == "--install" ]; then
@@ -166,8 +167,8 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
          else
             echo "No known methode to install package $2! Aborted!"
          fi
-         if [ -f "$2-install.sh" ]; then
-            ./$2-install.sh $pkgfldr $infldr $2
+         if [ -f "$2_install.sh" ]; then
+            ./$2_install.sh $pkgfldr $infldr $2 full
          fi
          if [ -f "$2-display.txt" ]; then
             cat "$2-display.txt"

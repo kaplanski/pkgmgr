@@ -1,6 +1,7 @@
 #!/bin/bash
 arch=${1%/}
-if [ "$arch" == "i386" -o "$arch" == "amd64" ]; then
+ID_cnt=1
+if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" == "python3" ]; then
    cd "$arch"
    for dir in */; do
       base=$(basename "$dir")
@@ -13,16 +14,19 @@ if [ "$arch" == "i386" -o "$arch" == "amd64" ]; then
       fi
    done
 
-   if [ -f index.txt ]; then
+   if [ -f index.db ]; then
       echo "removing old index..."
-      rm index.txt
+      rm index.db
    fi
 
-   for f in *.tgz; do
-      if [ "$f" != "*.tgz" ]; then
-         echo "${f%.tgz}" >> index.txt 2>/dev/null
-      else
-         touch index.txt
+   echo "[ID:Name:Version]" >> index.db
+
+   for f in *_v*.tgz; do
+      if [ "$f" != "*_v*.tgz" ]; then
+         p_ver="${f#*_v}"
+         ver="${p_ver%.tgz}"
+         echo "{$ID_cnt:${f%_v*}:$ver}" >> index.db 2>/dev/null
+         ID_cnt=$(($ID_cnt + 1))
       fi
    done
    echo "new index created!"
