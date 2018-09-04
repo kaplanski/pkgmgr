@@ -6,10 +6,11 @@ simple if-statements to give the user a full-blown package manager in return.
 *Features:*
 - can install precompiled binary packages, .sh and .py scrips (tar-gz format)  
 - can install source-code using GNU make (tar-gz format)  
-- easy to adopt other formats/package layouts
+- easy to adopt other formats/package layouts  
+- database of installed packages  
+- currently supported architectures: i386, amd64, python2, python3
 
 *Known issues:*
-- no list/database of installed packages  
 - no dependecy checks  
 
 *Planned:*

@@ -37,10 +37,15 @@ if [ ! -d $infldr ];then
    echo "Initial infldr created!"
 fi
 
-if [ ! -f $pkgfldr/index.db ]; then
+if [ ! -f $pkgfldr/installed_$arch.db ]; then
+   echo "[PKGID:Name:Version]" > $pkgfldr/installed_$arch.db
+   echo "Initial installed.db created!"
+fi
+
+if [ ! -f $pkgfldr/index_$arch.db ]; then
    echo "Initial package index download..."
    echo "Using online repo $repo"
-   cd $pkgfldr && wget -t 1 $repo/$arch/index.db
+   cd $pkgfldr && wget -q -t 1 $repo/$arch/index.db -O index_$arch.db
    echo "Done!"
 fi
 
@@ -60,17 +65,18 @@ elif [ "$1" == "-h" -o "$1" == "--help" ]; then
 elif [ "$1" == "-u" -o "$1" == "--update" ]; then
    echo "Updating package index..."
    echo "Using online repo $repo"
-   cd $pkgfldr && wget -t 1 $repo/$arch/index.db -O index.db
+   cd $pkgfldr && wget -q -t 1 $repo/$arch/index.db -O index_$arch.db
    echo "Done!"
 elif [ "$1" == "-s" -o "$1" == "--search" ]; then
    if [ "$2" == "" ]; then
       echo "Empty request!"
    else
-      grep "$2" $pkgfldr/index.db | cut -d: -f2
+      grep "$2" $pkgfldr/index_$arch.db | cut -d: -f2
    fi
 elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
-   if [ -f "$infldr/$2" ]; then
-      rm -ri $infldr/$2
+   if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" ==  "$2" -a -f "$infldr/$2" ]; then
+      rm -rf $infldr/$2
+      sed '/$(grep $2 $pkgfldr/index_$arch.db)/d' $pkgfldr/index_$arch.db
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"
@@ -80,34 +86,29 @@ elif [ "$1" == "-c" -o "$1" == "--clean" ]; then
    cd $pkgfldr && rm -rf *.tgz 2>/dev/null
    echo "Done!"
 elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
-   prog=$(grep $2 $pkgfldr/index.db | cut -d: -f2)
+   prog=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)
    if [ "$prog" != "" -a "$prog" == "$2" ]; then
-      ver=$(grep $2 $pkgfldr/index.db | cut -d: -f3)
+      ver=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f3)
       ver="${ver%?}"
       if [ ! -f "$pkgfldr/$2_v$ver.tgz" ]; then
          echo "Downloading..."
-         cd $pkgfldr && wget -t 1 $repo/$arch/$2_v$ver.tgz
+         cd $pkgfldr && wget -q -t 1 $repo/$arch/$2_v$ver.tgz
       fi
       if [ -f "$pkgfldr/$2_v$ver.tgz" ]; then
          echo "Unpacking..."
          cd $pkgfldr && tar -xzf $2_v$ver.tgz && cd $2_v$ver
          echo "Installing $2..."
-         if [ -f "$2" ]; then
-            cp $2 $infldr/$2
-            echo alias "$2"="$infldr/$2" >> ~/.bashrc
-            echo "$2 installed sucessfully!"
-         elif [ -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
-            if [ -f "$2.bin" ]; then
-               cp $2.bin $infldr/$2
-            elif [ -f "$2.sh" ]; then
-               cp $2.sh $infldr/$2
-            elif [ -f "$2.py" ]; then
-               cp $2.py $infldr/$2
-            elif [-f "nofile" ]; then
-               echo "Multibinary archive"
-            fi
+         if [ -f "$2" -o -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
             if [ ! -f "nofile" ]; then
-               echo alias "$2"="$infldr/$2" >> ~/.bashrc
+               if [ -f "$2" ]; then
+                  cp $2 $infldr/$2
+               elif [ -f "$2.bin" ]; then
+                  cp $2.bin $infldr/$2
+               elif [ -f "$2.sh" ]; then
+                  cp $2.sh $infldr/$2
+               elif [ -f "$2.py" ]; then
+                  cp $2.py $infldr/$2
+               fi
             fi
             if [ -f "$2_install.sh" ]; then
                ./$2_install.sh $pkgfldr $infldr $2 lite
@@ -115,6 +116,7 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
             if [ -f "$2_display.txt" ]; then
                cat "$2_display.txt"
             fi
+            echo $(grep $2 $pkgfldr/index_$arch.db) >> $pkgfldr/installed_$arch.db
             echo "$2 installed sucessfully!"
          elif [ -f "configure" -o -f "Makefile" ]; then
             echo "$2 is not supported by the lite version of pkgmgr."
@@ -125,9 +127,9 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
       fi
    else
       echo "$2 not found!"
-      if [ "$(grep $2 $pkgfldr/index.db | cut -d: -f2)" != "" ]; then
+      if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" != "" ]; then
          echo "Similar sounding packages:"
-         grep $2 $pkgfldr/index.db | cut -d: -f2
+         grep $2 $pkgfldr/index_$arch.db | cut -d: -f2
       else
          echo "No similar sounding packages found!"
       fi
