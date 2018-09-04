@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#pkgmgr version 0.1bL - Copyright 2018 Jan-Daniel Kaplanski
+#pkgmgr version 0.1cL - Copyright 2018 Jan-Daniel Kaplanski
 #based on pkgmgr version 0.1a
 #
 #                            Help on Parameters
@@ -50,7 +50,7 @@ if [ ! -f $pkgfldr/index_$arch.db ]; then
 fi
 
 if [ "$1" == "" ]; then
-   echo "pkgmgr 0.1bL - by Jan-Daniel Kaplanski"
+   echo "pkgmgr 0.1cL - by Jan-Daniel Kaplanski"
    echo "try '$0 -h' for help"
 elif [ "$1" == "-h" -o "$1" == "--help" ]; then
    echo "Usage: pkgmgr [-c|-h|-i|-r|-s|-u] [pkg]"
@@ -62,6 +62,7 @@ elif [ "$1" == "-h" -o "$1" == "--help" ]; then
    echo "   -s [pkg]: (--search) searches for a package in the package index"
    echo "Current binary folder: $infldr"
    echo "Current pkgmgr folder: $pkgfldr"
+   echo "Current architecture: $arch"
 elif [ "$1" == "-u" -o "$1" == "--update" ]; then
    echo "Updating package index..."
    echo "Using online repo $repo"
@@ -76,7 +77,7 @@ elif [ "$1" == "-s" -o "$1" == "--search" ]; then
 elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
    if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" ==  "$2" -a -d "$infldr/$2" ]; then
       rm -rf $infldr/$2
-      sed -i '/$(grep $2 $pkgfldr/index_$arch.db)/d' $pkgfldr/installed_$arch.db
+      sed -i "/$(grep $2 $pkgfldr/index_$arch.db)/d" $pkgfldr/installed_$arch.db
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"

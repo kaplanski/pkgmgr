@@ -7,7 +7,7 @@ simple if-statements to give the user a full-blown package manager in return.
 - can install precompiled binary packages, .sh and .py scrips (tar-gz format)  
 - can install source-code using GNU make (tar-gz format)  
 - easy to adopt other formats/package layouts  
-- database of installed packages  
+- database of installed packages (lite version only - wip for full ver)  
 - currently supported architectures: i386, amd64, python2, python3
 
 *Known issues:*
