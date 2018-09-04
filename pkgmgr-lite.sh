@@ -100,21 +100,24 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
          echo "Installing $2..."
          if [ -f "$2" -o -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
             if [ ! -f "nofile" ]; then
+               mkdir $infldr/$2
                if [ -f "$2" ]; then
-                  cp $2 $infldr/$2
+                  cp $2 $infldr/$2/$2
                elif [ -f "$2.bin" ]; then
-                  cp $2.bin $infldr/$2
+                  cp $2.bin $infldr/$2/$2
                elif [ -f "$2.sh" ]; then
-                  cp $2.sh $infldr/$2
+                  cp $2.sh $infldr/$2/$2
                elif [ -f "$2.py" ]; then
-                  cp $2.py $infldr/$2
+                  cp $2.py $infldr/$2/$2
                fi
             fi
             if [ -f "$2_install.sh" ]; then
                ./$2_install.sh $pkgfldr $infldr $2 lite
             fi
             if [ -f "$2_display.txt" ]; then
+               echo ""
                cat "$2_display.txt"
+               echo ""
             fi
             echo $(grep $2 $pkgfldr/index_$arch.db) >> $pkgfldr/installed_$arch.db
             echo "$2 installed sucessfully!"
