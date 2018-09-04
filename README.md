@@ -10,8 +10,7 @@ simple if-statements to give the user a full-blown package manager in return.
 
 *Known issues:*
 - no list/database of installed packages  
-- repo index files are plain-text, not database files  
-- no dependecy checks
+- no dependecy checks  
 
 *Planned:*
 - .deb support  
