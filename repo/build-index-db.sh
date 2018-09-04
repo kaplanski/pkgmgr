@@ -2,20 +2,21 @@
 arch=${1%/}
 ID_cnt=1
 if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" == "python3" ]; then
+   echo "Running for $arch:"
    cd "$arch"
    for dir in */; do
       base=$(basename "$dir")
       if [ "$base" != "*" ]; then
-         echo "Building $base..."
+         echo "  Building $base..."
          tar -czf "${base}.tgz" "$dir"
          rm -rf "$dir"
       else
-         echo "nothing to build..."
+         echo "  nothing to build..."
       fi
    done
 
    if [ -f index.db ]; then
-      echo "removing old index..."
+      echo "  removing old index..."
       rm index.db
    fi
 
@@ -29,7 +30,8 @@ if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" 
          ID_cnt=$(($ID_cnt + 1))
       fi
    done
-   echo "new index created!"
+   echo "  new index created!"
+   echo "Done for $arch!"
 else
    echo "unknown architecture!"
 fi

@@ -33,35 +33,39 @@
 #   be smart and set pkgfldr and infldr to where you have rwx permission while using Devloc
 
 #Release defaults
-#mk=make
-#mkloc=
-#infldr=/usr/bin
-#pkgfldr=/etc/pkgmgr
-#repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
-#arch=i386
-#usr=$USER
-
-#Dev defaults
 mk=make
 mkloc=
-infldr=$PWD/installed
-pkgfldr=$PWD/pkgmgr
-#repo=
-repoloc=$PWD/repo
+infldr=/usr/bin
+pkgfldr=/etc/pkgmgr
+repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
 arch=i386
 usr=$USER
+
+#Dev defaults
+#mk=make
+#mkloc=
+#infldr=$PWD/installed
+#pkgfldr=$PWD/pkgmgr
+#repo=
+#repoloc=$PWD/repo
+#arch=i386
+#usr=$USER
 
 if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
    if [ ! -d $pkgfldr ]; then
       mkdir $pkgfldr
       echo "Initial pkgfolder created!"
    fi
+   if [ ! -d $infldr ]; then
+      mkdir $infldr
+      echo "Initial infolder created!"
+   fi
 
    if [ ! -f $pkgfldr/index.db ]; then
       echo "Initial package index download..."
       if [ "$repo" != "" ]; then
          echo "Using online repo $repo"
-         cd $pkgfldr && wget -t=1 $repo/$arch/index.db
+         cd $pkgfldr && wget -t 1 $repo/$arch/index.db
       elif [ "$repoloc" != "" ]; then
          echo "Using local repo $repoloc"
          dd if=$repoloc/$arch/index.db of=$pkgfldr/index.db
@@ -92,10 +96,10 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
       echo "Current pkgmgr folder: $pkgfldr"
    elif [ "$1" == "-u" -o "$1" == "--update" ]; then
       echo "Updating package index..."
-      if [ $repo ]; then
+      if [ "$repo" != "" ]; then
          echo "Using online repo $repo"
-         cd $pkgfldr && wget -t=1 $repo/$arch/index.db -O index.db
-      elif [ $repoloc ]; then
+         cd $pkgfldr && wget -t 1 $repo/$arch/index.db -O index.db
+      elif [ "$repoloc" != "" ]; then
          echo "Using local repo $repoloc"
          dd if=$repoloc/$arch/index.db of=$pkgfldr/index.db
       fi
@@ -117,63 +121,73 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
       echo "Removing any downloaded packages from cache..."
       cd $pkgfldr && rm -rf *.tgz 2>/dev/null
       echo "Done!"
-   elif [ "$1" == "-i" -o "$1" == "--install" ]; then
-      if [ ! -f "$pkgfldr/$2.tgz" ]; then
-         echo "Downloading..."
-         if [ $repo ]; then
-            cd $pkgfldr && wget -t=1 $repo/$arch/$2.tgz 2>/dev/null; isitok=$?
-         elif [ $repoloc ]; then
-            echo "Using local repo $repoloc"
-            dd if=$repoloc/$arch/$2.tgz of=$pkgfldr/$2.tgz 2>/dev/null; isitok=$?
-         fi
-         if [ "$isitok" != "0" ]; then
-            echo "Package $2 not found on repo!"
-         fi
-      fi
-      if [ -f "$pkgfldr/$2.tgz" ]; then
-         echo "Unpacking..."
-         cd $pkgfldr && tar -xzf $2.tgz && cd $2
-         echo "Installing $2..."
-         if [ -f "$2" ]; then
-            cp $2 $infldr/$2
-            echo "$2 installed sucessfully!"
-         elif [ -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
-            if [ -f "$2.bin" ]; then
-               cp $2.bin $infldr/$2
-            elif [ -f "$2.sh" ]; then
-               cp $2.sh $infldr/$2
-            elif [ -f "$2.py" ]; then
-               cp $2.sh $infldr/$2
+   elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
+      prog=$(grep $2 $pkgfldr/index.db | cut -d: -f2)
+      if [ "$prog" != "" -a "$prog" == "$2" ]; then
+         ver=$(grep $2 $pkgfldr/index.db | cut -d: -f3)
+         ver="${ver%?}"
+         if [ ! -f "$pkgfldr/$2_v$ver.tgz" ]; then
+            echo "Downloading..."
+            if [ $repo ]; then
+               cd $pkgfldr && wget -t 1 $repo/$arch/$2_v$ver.tgz 2>/dev/null
+            elif [ $repoloc ]; then
+               echo "Using local repo $repoloc"
+               dd if=$repoloc/$arch/$2_v$ver.tgz of=$pkgfldr/$2_v$ver.tgz 2>/dev/null
             fi
-            echo "$2 installed sucessfully!"
-         elif [ -f "configure" -o -f "Makefile" ]; then
-            if [ -f "$mkloc/$mk" -o -f "/bin/$mk" -o -f "/usr/bin/$mk" ]; then
-               if [ -f "configure" ]; then
-                  echo "configuring $2..."
-                  ./configure
-                  echo "Done!"
+         fi
+         if [ -f "$pkgfldr/$2_v$ver.tgz" ]; then
+            echo "Unpacking..."
+            cd $pkgfldr && tar -xzf $2_v$ver.tgz && cd $2_v$ver
+            echo "Installing $2..."
+            if [ -f "$2" ]; then
+               cp $2 $infldr/$2
+               echo "$2 installed sucessfully!"
+            elif [ -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
+               if [ -f "$2.bin" ]; then
+                  cp $2.bin $infldr/$2
+               elif [ -f "$2.sh" ]; then
+                  cp $2.sh $infldr/$2
+               elif [ -f "$2.py" ]; then
+                  cp $2.sh $infldr/$2
+               elif [ -f "nofile" ]; then
+                  echo "Multibinary archive"
                fi
-               echo "Building $2 and installing using make..."
-               make 1>/dev/null
-               if [ "$usr" != "Devloc" ]; then
-                  make install 1>/dev/null
+               if [ -f "$2_install.sh" ]; then
+                  ./$2_install.sh $pkgfldr $infldr $2 full
+               fi
+               if [ -f "$2-display.txt" ]; then
+                  cat "$2-display.txt"
+               fi
+               echo "$2 installed sucessfully!"
+            elif [ -f "configure" -o -f "Makefile" ]; then
+               if [ -f "$mkloc/$mk" -o -f "/bin/$mk" -o -f "/usr/bin/$mk" ]; then
+                  if [ -f "configure" ]; then
+                     echo "configuring $2..."
+                     ./configure
+                     echo "Done!"
+                  fi
+                  echo "Building $2 and installing using make..."
+                  make 1>/dev/null
+                  if [ "$usr" != "Devloc" ]; then
+                     make install 1>/dev/null
+                  else
+                     echo "Not installed! (disabled due to Devloc)"
+                     echo "Run again to install the binary only. (should work, else: install manually)"
+                  fi
                else
-                  echo "Not installed! (disabled due to Devloc)"
-                  echo "Run again to install the binary only. (should work, else: install manually)"
+                  echo "make not found! Unable to build $2!"
                fi
             else
-               echo "make not found! Unable to build $2!"
+               echo "No known methode to install package $2! Aborted!"
             fi
-         else
-            echo "No known methode to install package $2! Aborted!"
+            cd .. && rm -rf $2
          fi
-         if [ -f "$2_install.sh" ]; then
-            ./$2_install.sh $pkgfldr $infldr $2 full
+      else
+         echo "$2 not found!"
+         if [ "$(grep $2 $pkgfldr/index.db | cut -d: -f2)" != "" ]; then
+            echo "Similar sounding packages:"
+            grep $2 $pkgfldr/index.db | cut -d: -f2
          fi
-         if [ -f "$2-display.txt" ]; then
-            cat "$2-display.txt"
-         fi
-         cd .. && rm -rf $2
       fi
    fi
 else
