@@ -125,7 +125,7 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
                cat "$2_display.txt"
                echo ""
             fi
-            if [ $(grep $2 $pkgfldr/installed_$arch.db) != $(grep $2 $pkgfldr/index_$arch.db) ]; then
+            if [ "$(grep $2 $pkgfldr/installed_$arch.db)" != "$(grep $2 $pkgfldr/index_$arch.db)" ]; then
                echo $(grep $2 $pkgfldr/index_$arch.db) >> $pkgfldr/installed_$arch.db
             fi
             echo "$2 installed sucessfully!"
