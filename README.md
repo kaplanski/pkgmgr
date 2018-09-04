@@ -17,7 +17,7 @@ simple if-statements to give the user a full-blown package manager in return.
 - [DONE] a lite version (dev-options and make removed, usable without root access)  
 - usage of 'DBISshit!' for repo index files
 
-Package structure for testbinary_v0.1.tgz:
+*Package structure for testbinary_v0.1.tgz:*
 - testbinary.bin (binary or script with no ending or .bin, .sh or .py)  
   - if no .bin, .sh, .py with packagename is present include an (empty) file called "nofile" (_install.sh is REQUIRED)  
 - OPTIONAL: testbinary_display.txt (Message to be shown after install has completed)  
