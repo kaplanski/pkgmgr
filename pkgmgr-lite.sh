@@ -74,9 +74,9 @@ elif [ "$1" == "-s" -o "$1" == "--search" ]; then
       grep "$2" $pkgfldr/index_$arch.db | cut -d: -f2
    fi
 elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
-   if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" ==  "$2" -a -f "$infldr/$2" ]; then
+   if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" ==  "$2" -a -d "$infldr/$2" ]; then
       rm -rf $infldr/$2
-      sed '/$(grep $2 $pkgfldr/index_$arch.db)/d' $pkgfldr/index_$arch.db
+      sed -i '/$(grep $2 $pkgfldr/index_$arch.db)/d' $pkgfldr/installed_$arch.db
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"
@@ -100,7 +100,13 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
          echo "Installing $2..."
          if [ -f "$2" -o -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
             if [ ! -f "nofile" ]; then
-               mkdir $infldr/$2
+               if [ ! -f "$infldr/$2" ]; then
+                  mkdir $infldr/$2
+               else
+                  echo "Removing previous version..."
+                  rm -rf $infldr/$2/*
+                  echo "Done!"
+               fi
                if [ -f "$2" ]; then
                   cp $2 $infldr/$2/$2
                elif [ -f "$2.bin" ]; then
@@ -119,14 +125,16 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
                cat "$2_display.txt"
                echo ""
             fi
-            echo $(grep $2 $pkgfldr/index_$arch.db) >> $pkgfldr/installed_$arch.db
+            if [ $(grep $2 $pkgfldr/installed_$arch.db) != $(grep $2 $pkgfldr/index_$arch.db) ]; then
+               echo $(grep $2 $pkgfldr/index_$arch.db) >> $pkgfldr/installed_$arch.db
+            fi
             echo "$2 installed sucessfully!"
          elif [ -f "configure" -o -f "Makefile" ]; then
             echo "$2 is not supported by the lite version of pkgmgr."
          else
             echo "No known methode to install package $2! Aborted!"
          fi
-         cd .. && rm -rf $2
+         cd .. && rm -rf $2_v$ver
       fi
    else
       echo "$2 not found!"

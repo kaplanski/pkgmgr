@@ -1,24 +1,19 @@
-#automated install script
-#leave settings on default to work!
-#ver is either 'lite' or 'full'
-
 pkgfldr=$1
 infldr=$2
 pkgname=$3
-ver=$4
 
-if [ ! -d "$infldr/src" ]; then
+if [ ! -d "$pkgfldr/src" ]; then
    echo "Initial creation of $pkgfldr/src!"
-   mkdir "$infldr/src"
+   mkdir "$pkgfldr/src"
    echo "Done!"
 fi
 
-if [ ! -d "$infldr/src/$pkgname" ]; then
-   echo "Creating $infldr/src/$pkgname..."
-   mkdir "$infldr/src/$pkgname"
+if [ ! -d "$pkgfldr/src/$pkgname" ]; then
+   echo "Creating $pkgfldr/src/$pkgname..."
+   mkdir "$pkgfldr/src/$pkgname"
    echo "Done!"
 fi
 
-echo "Copying source code of $pkgname to $infldr/src/$pkgname..."
-cp src/* "$infldr/src/$pkgname"
+echo "Copying source code of $pkgname to $pkgfldr/src/$pkgname..."
+cp src/* "$pkgfldr/src/$pkgname"
 echo "Done!"

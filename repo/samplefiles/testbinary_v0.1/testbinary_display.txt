@@ -1,5 +1,5 @@
 You just installed the testbinary for pkgmgr!
 
 It does next to nothing, it's just for devs to know how a package looks like.
-As the testbinary-install.sh and testbinary-install-lite.sh scripts are
+As the testbinary_install.sh and testbinary_display.txt scripts are
 nearly generic they can be used as a template for other programs.
