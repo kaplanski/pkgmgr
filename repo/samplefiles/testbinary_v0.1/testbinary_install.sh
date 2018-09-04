@@ -1,6 +1,11 @@
+#automated install script
+#leave settings on default to work!
+#ver is either 'lite' or 'full'
+
 pkgfldr=$1
 infldr=$2
 pkgname=$3
+ver=$4
 
 if [ ! -d "$infldr/src" ]; then
    echo "Initial creation of $pkgfldr/src!"
