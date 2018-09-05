@@ -3,11 +3,11 @@
 **pkgmgr** uses standard tools like the bash interpreter, cp and wget combined with  
 simple if-statements to give the user a full-blown package manager in return.
 
-*Install instructions:*
+*Install instructions:*  
 wget https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/pkgmgr-lite.sh
 chmod ugo+x pkgmgr-lite.sh
 
-*Versions:*
+*Versions:*  
 dev: pkgmgr.sh (support dropped, present in i386 and amd64 repos)  
 lite: pkgmgr-lite.sh  
 
