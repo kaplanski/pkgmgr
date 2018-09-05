@@ -55,13 +55,13 @@ if [ "$1" == "" ]; then
 elif [ "$1" == "-h" -o "$1" == "--help" ]; then
    echo "Usage: pkgmgr [-c|-da|-di|-h|-i|-r|-s|-u] [pkg]"
    echo "   -c: (--clean) cleans the package folder of downloaded packages"
-   echo "  -da: (--displayall) list all available packages for $arch"
-   echo "  -di: (--displayinstalled) list all installed packages for $arch"
    echo "   -h: (--help) displays this help"
    echo "   -u: (--update) updates the package index"
    echo "   -i [pkg]: (--install) installs a package"
    echo "   -r [pkg]: (--remove) removes a package"
    echo "   -s [pkg]: (--search) searches for a package in the package index"
+   echo "  -da: (--displayall) list all available packages for $arch"
+   echo "  -di: (--displayinstalled) list all installed packages for $arch"
    echo "Current binary folder: $infldr"
    echo "Current pkgmgr folder: $pkgfldr"
    echo "Current architecture: $arch"
@@ -106,16 +106,16 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
       if [ -f "$pkgfldr/$2_v$ver.tgz" ]; then
          echo "Unpacking..."
          cd $pkgfldr && tar -xzf $2_v$ver.tgz && cd $2_v$ver
+         if [ ! -d "$infldr/$2" ]; then
+            mkdir $infldr/$2
+         else
+            echo "Removing previous version..."
+            rm -rf $infldr/$2/*
+            echo "Done!"
+         fi
          echo "Installing $2..."
          if [ -f "$2" -o -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
             if [ ! -f "nofile" ]; then
-               if [ ! -f "$infldr/$2" ]; then
-                  mkdir $infldr/$2
-               else
-                  echo "Removing previous version..."
-                  rm -rf $infldr/$2/*
-                  echo "Done!"
-               fi
                if [ -f "$2" ]; then
                   cp $2 $infldr/$2/$2
                elif [ -f "$2.bin" ]; then
@@ -126,6 +126,19 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
                   cp $2.py $infldr/$2/$2
                fi
             fi
+            if [ -f "$2_install.sh" ]; then
+               ./$2_install.sh $pkgfldr $infldr $2 lite
+            fi
+            if [ -f "$2_display.txt" ]; then
+               echo ""
+               cat "$2_display.txt"
+               echo ""
+            fi
+            if [ "$(grep $2 $pkgfldr/installed_$arch.db)" != "$(grep $2 $pkgfldr/index_$arch.db)" ]; then
+               echo $(grep $2 $pkgfldr/index_$arch.db) >> $pkgfldr/installed_$arch.db
+            fi
+            echo "$2 installed sucessfully!"
+         elif [ -f "nofile" ]; then
             if [ -f "$2_install.sh" ]; then
                ./$2_install.sh $pkgfldr $infldr $2 lite
             fi
