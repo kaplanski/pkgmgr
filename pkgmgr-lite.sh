@@ -170,7 +170,7 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
                   cp $2.py $infldr/$2/$2
                fi
                echo "alias $2=$infldr/$2/$2" >> $pkgfldr/.aliases.sh
-               source $pkgfldr/aliases.sh
+               source $pkgfldr/.aliases.sh
             fi
             if [ -f "$2_install.sh" ]; then
                ./$2_install.sh $pkgfldr $infldr $2 lite
