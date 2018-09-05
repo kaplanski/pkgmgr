@@ -16,6 +16,7 @@ fi
 echo "Installing $pkgname..."
 cp * "$infldr/$pkgname"
 #if [ "$ver" == "lite" ]; then
-#   echo "alias [name]=$infldr/$pkgname/[file]" >> ~/.bashrc
+#   echo "alias [name]=$infldr/$pkgname/[file]" >> $pkgfldr/.aliases.sh
+#   source $pkgfldr/.aliases.sh
 #fi
 echo "Done!"
