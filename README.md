@@ -25,6 +25,13 @@ lite: pkgmgr-lite.sh
 - [DONE] a lite version (dev-options and make removed, usable without root access)  
 - [DONE] usage of 'DBISshit!'-Format for repo index files  
 
+*Reqired tools:*
+- bash interpreter  
+- grep (package search)  
+- cut (package search)  
+- sed (package removal from db when removing a package)  
+- wget (index and package download)  
+
 *Package structure for testbinary_v0.1.tgz:*
 - testbinary.bin (binary or script with no ending or .bin, .sh or .py)  
   - if no .bin, .sh, .py with packagename is present include an (empty) file  
