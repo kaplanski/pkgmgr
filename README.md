@@ -29,7 +29,7 @@ lite: pkgmgr-lite.sh
 - testbinary.bin (binary or script with no ending or .bin, .sh or .py)  
   - if no .bin, .sh, .py with packagename is present include an (empty) file  
     called "nofile" ([packagename]_install.sh is REQUIRED)
-- OPTIONAL: noflie
+- OPTIONAL: nofile
 - OPTIONAL: testbinary_display.txt (Message to be shown after install has completed)  
 - OPTIONAL: testbinary_install.sh (install instructions; REQUIRED if "nofile" is present)
 - OPTIONAL: anything named in _install.sh (like src)
