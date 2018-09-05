@@ -4,7 +4,7 @@
 simple if-statements to give the user a full-blown package manager in return.
 
 *Install instructions:*  
-wget https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/pkgmgr-lite.sh
+wget https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/pkgmgr-lite.sh  
 chmod ugo+x pkgmgr-lite.sh
 
 *Versions:*  
