@@ -125,6 +125,11 @@ elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
          rm -rf $pkgfldr/src/$2
       fi
       sed -i "/$(grep $2 $pkgfldr/index_$arch.db)/d" $pkgfldr/installed_$arch.db
+      if [ "$(grep $2 $pkgfldr/.aliases.sh)" == "$2" ]; then
+         sed -i "/$(grep $2 $pkgfldr/.aliases.sh)/d" $pkgfldr/.aliases.sh
+      elif [ -f $infldr/$2/$2_uninstall.sh ]; then
+         source $infldr/$2/$2_uninstall.sh
+      fi
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"
