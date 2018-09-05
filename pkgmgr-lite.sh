@@ -50,7 +50,7 @@ if [ ! -d $pkgfldr/src ]; then
    echo "Initial srcfolder created!"
 fi
 
-if [ ! -d $infldr ];then
+if [ ! -d $infldr ]; then
    mkdir $infldr
    echo "Initial infldr created!"
 fi
@@ -58,6 +58,18 @@ fi
 if [ ! -d $pkgfldr/$ARCHfldr ]; then
    mkdir $pkgfldr/$ARCHfldr
    echo "Initial archive folder created!"
+fi
+
+if [ ! -f $pkgfldr/.aliases.sh ]; then
+   echo '#alises for pkgmgr' > $pkgfldr/.aliases.sh
+   chmod ugo+x $pkgfldr/.aliases.sh
+   if [ -f ~/.bashrc ]; then
+      echo "source $pkgfldr/.aliases.sh" >> ~/.bashrc
+   elif [ -f ~/.shrc ]; then
+      echo "source $pkgfldr/.aliases.sh" >> ~/.shrc
+   else
+      echo "No bashrc or shrc file found! need to append >source $pkgfldr/.aliases.sh< manually!"
+   fi
 fi
 
 if [ ! -f $pkgfldr/installed_$arch.db ]; then
@@ -152,6 +164,8 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
                elif [ -f "$2.py" ]; then
                   cp $2.py $infldr/$2/$2
                fi
+               echo "alias $2=$infldr/$2/$2" >> $pkgfldr/.aliases.sh
+               source $pkgfldr/aliases.sh
             fi
             if [ -f "$2_install.sh" ]; then
                ./$2_install.sh $pkgfldr $infldr $2 lite
@@ -179,7 +193,7 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
             fi
             echo "$2 installed sucessfully!"
          elif [ -f "configure" -o -f "Makefile" ]; then
-            echo "$2 is not supported by the lite version of pkgmgr."
+            echo "$2 is not supported by the lite version of pkgmgr!"
          else
             echo "No known methode to install package $2! Aborted!"
          fi
