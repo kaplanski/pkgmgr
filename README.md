@@ -14,9 +14,10 @@ simple if-statements to give the user a full-blown package manager in return.
 - no dependecy checks  
 
 *Planned:*
-- .deb support  
 - [DONE] a lite version (dev-options and make removed, usable without root access)  
-- usage of 'DBISshit!' for repo index files
+  - support for main version (pkgmgr.sh) is dropped  
+    it is present in the i386 and amd64 repo  
+- [DONE] usage of 'DBISshit!' for repo index files
 
 *Package structure for testbinary_v0.1.tgz:*
 - testbinary.bin (binary or script with no ending or .bin, .sh or .py)  
