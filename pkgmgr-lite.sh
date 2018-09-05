@@ -20,6 +20,7 @@
 #Release defaults
 infldr=~/pkgmgr/bin
 pkgfldr=~/pkgmgr
+ARCHfldr=ARCH
 repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
 arch=i386
 
@@ -32,9 +33,19 @@ if [ ! -d $pkgfldr ]; then
    echo "Initial pkgfolder created!"
 fi
 
+if [ ! -d $pkgfldr/src ]; then
+   mkdir $pkgfldr/src
+   echo "Initial srcfolder created!"
+fi
+
 if [ ! -d $infldr ];then
    mkdir $infldr
    echo "Initial infldr created!"
+fi
+
+if [ ! -d $pkgfldr/$ARCHfldr ]; then
+   mkdir $pkgfldr/$ARCHfldr
+   echo "Initial archive folder created!"
 fi
 
 if [ ! -f $pkgfldr/installed_$arch.db ]; then
@@ -84,7 +95,11 @@ elif [ "$1" == "-di" -o "$1" == "--displayinstalled" ]; then
    grep { $pkgfldr/installed_$arch.db | cut -d: -f2
 elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
    if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" ==  "$2" -a -d "$infldr/$2" ]; then
+      echo "Removing $2..."
       rm -rf $infldr/$2
+      if [ -d $pkgfldr/src/$2 ]; then
+         rm -rf $pkgfldr/src/$2
+      fi
       sed -i "/$(grep $2 $pkgfldr/index_$arch.db)/d" $pkgfldr/installed_$arch.db
       echo "Done!"
    else
@@ -92,20 +107,20 @@ elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
    fi
 elif [ "$1" == "-c" -o "$1" == "--clean" ]; then
    echo "Removing any downloaded packages from cache..."
-   cd $pkgfldr && rm -rf *.tgz 2>/dev/null
+   cd $pkgfldr/$ARCHfldr && rm -rf * 2>/dev/null
    echo "Done!"
 elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
    prog=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)
    if [ "$prog" != "" -a "$prog" == "$2" ]; then
       ver=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f3)
       ver="${ver%?}"
-      if [ ! -f "$pkgfldr/$2_v$ver.tgz" ]; then
+      if [ ! -f "$pkgfldr/$ARCHfldr/$2_v$ver.tgz" ]; then
          echo "Downloading..."
-         cd $pkgfldr && wget -q -t 1 $repo/$arch/$2_v$ver.tgz
+         cd $pkgfldr/$ARCHfldr && wget -q -t 1 $repo/$arch/$2_v$ver.tgz
       fi
-      if [ -f "$pkgfldr/$2_v$ver.tgz" ]; then
+      if [ -f "$pkgfldr/$ARCHfldr/$2_v$ver.tgz" ]; then
          echo "Unpacking..."
-         cd $pkgfldr && tar -xzf $2_v$ver.tgz && cd $2_v$ver
+         cd $pkgfldr/$ARCHfldr && tar -xzf $2_v$ver.tgz && cd $2_v$ver
          if [ ! -d "$infldr/$2" ]; then
             mkdir $infldr/$2
          else
