@@ -67,12 +67,12 @@ if [ ! -d $infldr ]; then
    echo "Initial infolder created!"
 fi
 
-if [ ! -d $pkgldr/$ARCHfldr ]; then
+if [ ! -d $pkgfldr/$ARCHfldr ]; then
    mkdir $pkgfldr/$ARCHfldr
    echo "Initial archive folder created!"
 fi
 
-if [ ! -d $pkgldr/src ]; then
+if [ ! -d $pkgfldr/src ]; then
    mkdir $pkgfldr/src
    echo "Initial src folder created!"
 fi
