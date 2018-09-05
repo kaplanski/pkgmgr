@@ -15,7 +15,7 @@
 #   it will auto-create on first run
 #repo
 #   is the path to the online software repo
-#   currently uses wget -q, could change in the future
+#   currently uses wget, could change in the future
 #   maybe a sftp or ssh+dd solution
 #   ---NO SERVER ONLINE--- 2018-08-23T01:27:00+0200UTC
 #   using https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
@@ -37,7 +37,6 @@
 #mkloc=
 #infldr=/usr/bin
 #pkgfldr=/etc/pkgmgr
-#ARCHfldr=ARCH
 #repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
 #arch=i386
 #usr=$USER
@@ -47,7 +46,6 @@ mk=make
 mkloc=
 infldr=$PWD/installed
 pkgfldr=$PWD/pkgmgr
-ARCHfldr=ARCH
 repo=
 repoloc=$PWD/repo
 arch=i386
@@ -58,35 +56,19 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
       mkdir $pkgfldr
       echo "Initial pkgfolder created!"
    fi
-
    if [ ! -d $infldr ]; then
       mkdir $infldr
       echo "Initial infolder created!"
    fi
 
-   if [ ! -d $pkgldr/$ARCHfldr ]; then
-      mkdir $pkgfldr/$ARCHfldr
-      echo "Initial archive folder created!"
-   fi
-
-   if [ ! -d $pkgldr/src ]; then
-      mkdir $pkgfldr/src
-      echo "Initial src folder created!"
-   fi
-
-   if [ ! -f $pkgfldr/installed_$arch.db ]; then
-      echo "[PKGID:Name:Version]" > $pkgfldr/installed_$arch.db
-      echo "Initial installed_$arch.db created!"
-   fi
-
-   if [ ! -f $pkgfldr/index_$arch.db ]; then
+   if [ ! -f $pkgfldr/index.db ]; then
       echo "Initial package index download..."
       if [ "$repo" != "" ]; then
          echo "Using online repo $repo"
-         cd $pkgfldr && wget -q -t 1 $repo/$arch/index_$arch.db
+         cd $pkgfldr && wget -t 1 $repo/$arch/index.db
       elif [ "$repoloc" != "" ]; then
          echo "Using local repo $repoloc"
-         dd if=$repoloc/$arch/index.db of=$pkgfldr/index_$arch.db
+         dd if=$repoloc/$arch/index.db of=$pkgfldr/index.db
       fi
       echo "Done!"
    fi
@@ -116,10 +98,10 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
       echo "Updating package index..."
       if [ "$repo" != "" ]; then
          echo "Using online repo $repo"
-         cd $pkgfldr && wget -q -t 1 $repo/$arch/index.db -O index_$arch.db
+         cd $pkgfldr && wget -t 1 $repo/$arch/index.db -O index.db
       elif [ "$repoloc" != "" ]; then
          echo "Using local repo $repoloc"
-         dd if=$repoloc/$arch/index.db of=$pkgfldr/index_$arch.db
+         dd if=$repoloc/$arch/index.db of=$pkgfldr/index.db
       fi
       echo "Done!"
    elif [ "$1" == "-s" -o "$1" == "--search" ]; then
@@ -140,63 +122,41 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
       cd $pkgfldr && rm -rf *.tgz 2>/dev/null
       echo "Done!"
    elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
-      prog=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)
+      prog=$(grep $2 $pkgfldr/index.db | cut -d: -f2)
       if [ "$prog" != "" -a "$prog" == "$2" ]; then
-         ver=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f3)
+         ver=$(grep $2 $pkgfldr/index.db | cut -d: -f3)
          ver="${ver%?}"
-         if [ ! -f "$pkgfldr/$ARCHfldr/$2_v$ver.tgz" ]; then
+         if [ ! -f "$pkgfldr/$2_v$ver.tgz" ]; then
             echo "Downloading..."
             if [ $repo ]; then
-               cd $pkgfldr/$ARCHfldr && wget -q -t 1 $repo/$arch/$2_v$ver.tgz
+               cd $pkgfldr && wget -t 1 $repo/$arch/$2_v$ver.tgz 2>/dev/null
             elif [ $repoloc ]; then
                echo "Using local repo $repoloc"
-               dd if=$repoloc/$arch/$2_v$ver.tgz of=$pkgfldr/$ARCHfldr/$2_v$ver.tgz 2>/dev/null
+               dd if=$repoloc/$arch/$2_v$ver.tgz of=$pkgfldr/$2_v$ver.tgz 2>/dev/null
             fi
          fi
-         if [ -f "$pkgfldr/$ARCHfldr/$2_v$ver.tgz" ]; then
+         if [ -f "$pkgfldr/$2_v$ver.tgz" ]; then
             echo "Unpacking..."
-            cd $pkgfldr/$ARCHfldr && tar -xzf $2_v$ver.tgz && cd $2_v$ver
-            if [ ! -d "$infldr/$2" ]; then
-               mkdir $infldr/$2
-            else
-               echo "Removing previous version..."
-               rm -rf $infldr/$2/*
-               echo "Done!"
-            fi
+            cd $pkgfldr && tar -xzf $2_v$ver.tgz && cd $2_v$ver
             echo "Installing $2..."
-            elif [ -f "$2" -o -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
-               if [ ! -f "nofile" ]; then
-                  if [ -f "$2" ]; then
-                     cp $2 $infldr/$2/$2
-                  elif [ -f "$2.bin" ]; then
-                     cp $2.bin $infldr/$2/$2
-                  elif [ -f "$2.sh" ]; then
-                     cp $2.sh $infldr/$2/$2
-                  elif [ -f "$2.py" ]; then
-                     cp $2.sh $infldr/$2/$2
-                  elif [ -f "nofile" ]; then
-                     echo "Multibinary archive"
-                  fi
-               fi
-               if [ -f "$2_install.sh" ]; then
-                  ./$2_install.sh $pkgfldr $infldr $2 full
-               fi
-               if [ -f "$2-display.txt" ]; then
-                  cat "$2-display.txt"
-               fi
-               if [ "$(grep $2 $pkgfldr/installed_$arch.db)" != "$(grep $2 $pkgfldr/index_$arch.db)" ]; then
-                  echo $(grep $2 $pkgfldr/index_$arch.db) >> $pkgfldr/installed_$arch.db
-               fi
+            if [ -f "$2" ]; then
+               cp $2 $infldr/$2
                echo "$2 installed sucessfully!"
-            elif [ -f "nofile" ]; then
+            elif [ -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
+               if [ -f "$2.bin" ]; then
+                  cp $2.bin $infldr/$2
+               elif [ -f "$2.sh" ]; then
+                  cp $2.sh $infldr/$2
+               elif [ -f "$2.py" ]; then
+                  cp $2.sh $infldr/$2
+               elif [ -f "nofile" ]; then
+                  echo "Multibinary archive"
+               fi
                if [ -f "$2_install.sh" ]; then
                   ./$2_install.sh $pkgfldr $infldr $2 full
                fi
                if [ -f "$2-display.txt" ]; then
                   cat "$2-display.txt"
-               fi
-               if [ "$(grep $2 $pkgfldr/installed_$arch.db)" != "$(grep $2 $pkgfldr/index_$arch.db)" ]; then
-                  echo $(grep $2 $pkgfldr/index_$arch.db) >> $pkgfldr/installed_$arch.db
                fi
                echo "$2 installed sucessfully!"
             elif [ -f "configure" -o -f "Makefile" ]; then
@@ -220,13 +180,13 @@ if [ "$usr" == "root" -o "$usr" == "Devloc" ]; then
             else
                echo "No known methode to install package $2! Aborted!"
             fi
-            cd .. && rm -rf $2_v$arch
+            cd .. && rm -rf $2
          fi
       else
          echo "$2 not found!"
-         if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" != "" ]; then
+         if [ "$(grep $2 $pkgfldr/index.db | cut -d: -f2)" != "" ]; then
             echo "Similar sounding packages:"
-            grep $2 $pkgfldr/index_$arch.db | cut -d: -f2
+            grep $2 $pkgfldr/index.db | cut -d: -f2
          fi
       fi
    fi
