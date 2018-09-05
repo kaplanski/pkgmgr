@@ -18,11 +18,23 @@
 #   currently supported: i386, amd64, python2, python3
 
 #Release defaults
+#infldr=~/pkgmgr/bin
+#pkgfldr=~/pkgmgr
+#ARCHfldr=ARCH
+#repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
+#arch=i386
+
+#my config
 infldr=~/pkgmgr/bin
 pkgfldr=~/pkgmgr
 ARCHfldr=ARCH
 repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
 arch=i386
+
+if [ "$infldr" == "" -o "$pkgfldr" == "" -o "$ARCHfldr" == "" -o "$repo" == "" -o "$arch" == "" ]; then
+   echo "Check config!"
+   exit 0
+fi
 
 if [ "$USER" == "root" ]; then
    echo "No need to run as root."

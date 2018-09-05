@@ -3,8 +3,13 @@
 **pkgmgr** uses standard tools like the bash interpreter, cp and wget combined with  
 simple if-statements to give the user a full-blown package manager in return.
 
-dev-version: pkgmgr.sh (support dropped, present in i386 and amd64 repos)  
-lite-version: pkgmgr-lite.sh  
+*Install instructions:*
+wget https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/pkgmgr-lite.sh
+chmod ugo+x pkgmgr-lite.sh
+
+*Versions:*
+dev: pkgmgr.sh (support dropped, present in i386 and amd64 repos)  
+lite: pkgmgr-lite.sh  
 
 *Features:*
 - can install precompiled binary packages, .sh and .py scrips (tar-gz format)  
@@ -18,7 +23,7 @@ lite-version: pkgmgr-lite.sh
 
 *Planned:*
 - [DONE] a lite version (dev-options and make removed, usable without root access)  
-- [DONE] usage of 'DBISshit!'-Format for repo index files
+- [DONE] usage of 'DBISshit!'-Format for repo index files  
 
 *Package structure for testbinary_v0.1.tgz:*
 - testbinary.bin (binary or script with no ending or .bin, .sh or .py)  
