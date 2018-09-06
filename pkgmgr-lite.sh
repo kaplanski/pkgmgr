@@ -60,6 +60,12 @@ if [ ! -d $pkgfldr/$ARCHfldr ]; then
    echo "Initial archive folder created!"
 fi
 
+if [ ! -f $pkgfldr/.aliases.sh ]; then
+   touch $pkgfldr/.aliases.sh
+   chmod ugo+x $pkgfldr/.aliases.sh
+   echo "source $pkgfldr/.aliases.sh" >> $HOME/.bashrc
+fi
+
 if [ ! -f $pkgfldr/installed_$arch.db ]; then
    echo "[PKGID:Name:Version]" > $pkgfldr/installed_$arch.db
    echo "Initial installed_$arch.db created!"
