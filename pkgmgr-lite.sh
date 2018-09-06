@@ -82,37 +82,37 @@ fi
 if [ "$1" == "" ]; then
    echo "pkgmgr 0.1cL - by Jan-Daniel Kaplanski"
    echo "try '$0 -h' for help"
-elif [ "$1" == "-h" -o "$1" == "--help" ]; then
+elif [ "$1" == "-h" ]; then
    echo "Usage: pkgmgr [-c|-da|-di|-h|-i|-r|-s|-u] [pkg]"
-   echo "   -c: (--clean) cleans the package folder of downloaded packages"
-   echo "   -h: (--help) displays this help"
-   echo "   -u: (--update) updates the package index"
-   echo "   -i [pkg]: (--install) installs a package (-ri: reinstall)"
-   echo "   -r [pkg]: (--remove) removes a package"
-   echo "   -s [pkg]: (--search) searches for a package in the package index"
-   echo "  -da: (--displayall) list all available packages for $arch"
-   echo "  -di: (--displayinstalled) list all installed packages for $arch"
+   echo "   -c: cleans the package folder of downloaded packages"
+   echo "   -h: displays this help"
+   echo "   -u: updates the package index"
+   echo "   -i [pkg]: installs a package (-ri: reinstall)"
+   echo "   -r [pkg]: removes a package"
+   echo "   -s [pkg]: searches for a package in the package index"
+   echo "  -da: list all available packages for $arch"
+   echo "  -di: list all installed packages for $arch"
    echo "Current binary folder: $infldr"
    echo "Current pkgmgr folder: $pkgfldr"
    echo "Current architecture: $arch"
-elif [ "$1" == "-u" -o "$1" == "--update" ]; then
+elif [ "$1" == "-u" ]; then
    echo "Updating package index..."
    echo "Using online repo $repo"
    cd $pkgfldr && wget -q -t 1 $repo/$arch/index.db -O index_$arch.db
    echo "Done!"
-elif [ "$1" == "-s" -o "$1" == "--search" ]; then
+elif [ "$1" == "-s" ]; then
    if [ "$2" == "" ]; then
       echo "Empty request!"
    else
       grep "$2" $pkgfldr/index_$arch.db | cut -d: -f2
    fi
-elif [ "$1" == "-da" -o "$1" == "--displayall" ]; then
+elif [ "$1" == "-da" ]; then
    echo "Available packages for $arch:"
    grep { $pkgfldr/index_$arch.db | cut -d: -f2
-elif [ "$1" == "-di" -o "$1" == "--displayinstalled" ]; then
+elif [ "$1" == "-di" ]; then
    echo "Installed packages for $arch:"
    grep { $pkgfldr/installed_$arch.db | cut -d: -f2
-elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
+elif [ "$1" == "-r" ]; then
    if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" ==  "$2" -a -d "$infldr/$2" ]; then
       echo "Removing $2..."
       if [ -f $infldr/$2/.uninstall.sh ]; then
@@ -129,11 +129,11 @@ elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
    else
       echo "Package $2 not installed! Aborted!"
    fi
-elif [ "$1" == "-c" -o "$1" == "--clean" ]; then
+elif [ "$1" == "-c" ]; then
    echo "Removing any downloaded packages from cache..."
    cd $pkgfldr/$ARCHfldr && rm -rf * 2>/dev/null
    echo "Done!"
-elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; then
+elif [ "$1" == "-i" -o "$1" == "-ri" -a "$2" != "" ]; then
    prog=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)
    if [ "$prog" != "" ]; then
       if [ "$1" == "-i" -a "$2" == "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
