@@ -15,8 +15,12 @@ fi
 
 echo "Installing $pkgname..."
 cp * "$infldr/$pkgname"
+
 #if [ "$ver" == "lite" ]; then
-#   echo "alias [name]=$infldr/$pkgname/[file]" >> $pkgfldr/.aliases.sh
-#   source $pkgfldr/.aliases.sh
+#   echo "alias [name]=$infldr/$pkgname/[file]" >> $infldr/$pkgname/.alias.sh
+#   chmod ugo+x $infldr/$pkgname/.alias.sh
+#   source $infldr/$pkgname/.alias.sh
+#   echo "source $infldr/$pkgname/.alias.sh" >> ~/.bashrc
+#   echo "unalias [name]" >> $infldr/$pkgname/.uninstall.sh
 #fi
 echo "Done!"

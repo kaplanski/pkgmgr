@@ -33,7 +33,7 @@ arch=i386
 
 if [ "$infldr" == "" -o "$pkgfldr" == "" -o "$ARCHfldr" == "" -o "$repo" == "" -o "$arch" == "" ]; then
    echo "Check config!"
-   exit 0
+   exit 42
 fi
 
 if [ "$USER" == "root" ]; then
@@ -92,7 +92,7 @@ elif [ "$1" == "-h" -o "$1" == "--help" ]; then
    echo "   -c: (--clean) cleans the package folder of downloaded packages"
    echo "   -h: (--help) displays this help"
    echo "   -u: (--update) updates the package index"
-   echo "   -i [pkg]: (--install) installs a package"
+   echo "   -i [pkg]: (--install) installs a package (-ri: reinstall)"
    echo "   -r [pkg]: (--remove) removes a package"
    echo "   -s [pkg]: (--search) searches for a package in the package index"
    echo "  -da: (--displayall) list all available packages for $arch"
@@ -120,16 +120,15 @@ elif [ "$1" == "-di" -o "$1" == "--displayinstalled" ]; then
 elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
    if [ "$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)" ==  "$2" -a -d "$infldr/$2" ]; then
       echo "Removing $2..."
+      if [ -f $infldr/$2/.uninstall.sh ]; then
+         chmod ugo+x $infldr/$2/.uninstall.sh
+         source $infldr/$2/.uninstall.sh
+      fi
       rm -rf $infldr/$2
       if [ -d $pkgfldr/src/$2 ]; then
          rm -rf $pkgfldr/src/$2
       fi
       sed -i "/$(grep $2 $pkgfldr/index_$arch.db)/d" $pkgfldr/installed_$arch.db
-      if [ "$(grep $2 $pkgfldr/.aliases.sh)" == "$2" ]; then
-         sed -i "/$(grep $2 $pkgfldr/.aliases.sh)/d" $pkgfldr/.aliases.sh
-      elif [ -f $infldr/$2/$2_uninstall.sh ]; then
-         source $infldr/$2/$2_uninstall.sh
-      fi
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"
@@ -138,8 +137,12 @@ elif [ "$1" == "-c" -o "$1" == "--clean" ]; then
    echo "Removing any downloaded packages from cache..."
    cd $pkgfldr/$ARCHfldr && rm -rf * 2>/dev/null
    echo "Done!"
-elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
+elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; then
    prog=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)
+   if [ "$1" == "-ri" -a "$2" != "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
+      echo "$2 not installed! Aborting reinstall!"
+      exit 2
+   fi
    if [ "$prog" != "" -a "$prog" == "$2" ]; then
       ver=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f3)
       ver="${ver%?}"
@@ -214,3 +217,4 @@ elif [ "$1" == "-i" -o "$1" == "--install" -a "$2" != "" ]; then
       fi
    fi
 fi
+exit 0
