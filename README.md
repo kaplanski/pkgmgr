@@ -20,7 +20,7 @@ lite: pkgmgr-lite.sh
 
 *Known issues:*
 - no dependecy checks  
-- '-r' doesn't work properly (alias)  
+- '-r' doesn't work properly (alias - need to restart bash to be loaded after install)  
 
 *Planned:*
 - [DONE] a lite version (dev-options and make removed, usable without root access)  
