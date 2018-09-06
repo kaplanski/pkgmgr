@@ -60,18 +60,6 @@ if [ ! -d $pkgfldr/$ARCHfldr ]; then
    echo "Initial archive folder created!"
 fi
 
-if [ ! -f $pkgfldr/.aliases.sh ]; then
-   echo '#alises for pkgmgr' > $pkgfldr/.aliases.sh
-   chmod ugo+x $pkgfldr/.aliases.sh
-   if [ -f ~/.bashrc ]; then
-      echo "source $pkgfldr/.aliases.sh" >> ~/.bashrc
-   elif [ -f ~/.shrc ]; then
-      echo "source $pkgfldr/.aliases.sh" >> ~/.shrc
-   else
-      echo "No bashrc or shrc file found! need to append >source $pkgfldr/.aliases.sh< manually!"
-   fi
-fi
-
 if [ ! -f $pkgfldr/installed_$arch.db ]; then
    echo "[PKGID:Name:Version]" > $pkgfldr/installed_$arch.db
    echo "Initial installed_$arch.db created!"
@@ -129,6 +117,7 @@ elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
          rm -rf $pkgfldr/src/$2
       fi
       sed -i "/$(grep $2 $pkgfldr/index_$arch.db)/d" $pkgfldr/installed_$arch.db
+      sed -i "/$(grep $2 ~/.bashrc)/d" ~/.bashrc
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"
@@ -172,8 +161,11 @@ elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; the
                elif [ -f "$2.py" ]; then
                   cp $2.py $infldr/$2/$2
                fi
-               echo "alias $2=$infldr/$2/$2" >> $pkgfldr/.aliases.sh
-               source $pkgfldr/.aliases.sh
+               echo "alias $2=$infldr/$2/$2" >> $infldr/$2/.alias.sh
+               chmod ugo+x $infldr/$2/.alias.sh
+               source $infldr/$2/.alias.sh
+               echo "source $infldr/$2/.alias.sh" >> ~/.bashrc
+               echo "unalias $2" >> $infldr/$2/.uninstall.sh
             fi
             if [ -f "$2_install.sh" ]; then
                ./$2_install.sh $pkgfldr $infldr $2 lite
