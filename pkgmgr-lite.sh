@@ -164,7 +164,9 @@ elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; the
                echo "alias $2=$infldr/$2/$2" >> $infldr/$2/.alias.sh
                chmod ugo+x $infldr/$2/.alias.sh
                source $infldr/$2/.alias.sh
-               echo "source $infldr/$2/.alias.sh" >> ~/.bashrc
+               if [ "$1" != "-ri" ]; then
+                  echo "source $infldr/$2/.alias.sh" >> ~/.bashrc
+               fi
                echo "unalias $2" >> $infldr/$2/.uninstall.sh
             fi
             if [ -f "$2_install.sh" ]; then
