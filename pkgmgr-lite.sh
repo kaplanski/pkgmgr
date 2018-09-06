@@ -64,6 +64,7 @@ if [ ! -f $pkgfldr/.aliases.sh ]; then
    echo "#alias list file for pkgmgr" > $pkgfldr/.aliases.sh
    chmod ugo+x $pkgfldr/.aliases.sh
    echo "source $pkgfldr/.aliases.sh" >> $HOME/.bashrc
+   echo "Initial aliases file created!"
 fi
 
 if [ ! -f $pkgfldr/installed_$arch.db ]; then
@@ -134,8 +135,11 @@ elif [ "$1" == "-c" -o "$1" == "--clean" ]; then
    echo "Done!"
 elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; then
    prog=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)
-   if [ "$1" == "-ri" -a "$2" != "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
-      echo "$2 not installed! Aborting reinstall!"
+   if [ "$1" == "-i" -a "$2" == "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
+      echo "$2 is already installed! Aborting install..."
+      exit 2
+   elif [ "$1" == "-ri" -a "$2" != "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
+      echo "$2 is not installed! Aborting reinstall..."
       exit 2
    fi
    if [ "$prog" != "" -a "$prog" == "$2" ]; then
