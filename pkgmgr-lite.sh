@@ -61,7 +61,7 @@ if [ ! -d $pkgfldr/$ARCHfldr ]; then
 fi
 
 if [ ! -f $pkgfldr/.aliases.sh ]; then
-   touch $pkgfldr/.aliases.sh
+   echo "#alias list file for pkgmgr" > $pkgfldr/.aliases.sh
    chmod ugo+x $pkgfldr/.aliases.sh
    echo "source $pkgfldr/.aliases.sh" >> $HOME/.bashrc
 fi
@@ -123,7 +123,7 @@ elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
          rm -rf $pkgfldr/src/$2
       fi
       sed -i "#$(grep $2 $pkgfldr/index_$arch.db)#d" $pkgfldr/installed_$arch.db
-      sed -i "#$(grep $2 $pkgfldr/.aliases.sh#/d" $pkgfldr/.aliases.sh
+      sed -i "#$(grep $2 $pkgfldr/.aliases.sh)#d" $pkgfldr/.aliases.sh
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"
