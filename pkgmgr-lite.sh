@@ -151,6 +151,9 @@ elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; the
          fi
          echo "Installing $2..."
          if [ -f "$2" -o -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
+            if [ "$1" != "-ri" ]; then
+               echo "source $infldr/$2/.alias.sh" >> ~/.bashrc
+            fi
             if [ ! -f "nofile" ]; then
                if [ -f "$2" ]; then
                   cp $2 $infldr/$2/$2
@@ -163,10 +166,6 @@ elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; the
                fi
                echo "alias $2=$infldr/$2/$2" >> $infldr/$2/.alias.sh
                chmod ugo+x $infldr/$2/.alias.sh
-               source $infldr/$2/.alias.sh
-               if [ "$1" != "-ri" ]; then
-                  echo "source $infldr/$2/.alias.sh" >> ~/.bashrc
-               fi
                echo "unalias $2" >> $infldr/$2/.uninstall.sh
             fi
             if [ -f "$2_install.sh" ]; then
