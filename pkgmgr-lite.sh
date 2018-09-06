@@ -6,9 +6,9 @@
 #                            Help on Parameters
 #infldr
 #   is your installation folder where pkgmgr puts the binaries
-#   for standard behaviour set it to ~/pkgmgr/bin
+#   for standard behaviour set it to $HOME/pkgmgr/bin
 #pkgfldr
-#   is the working directory of pkgmgr and is ideally set to ~/pkgmgr
+#   is the working directory of pkgmgr and is ideally set to $HOME/pkgmgr
 #   it will auto-create on first run
 #repo
 #   is the path to the online software repo
@@ -18,15 +18,15 @@
 #   currently supported: i386, amd64, python2, python3
 
 #Release defaults
-#infldr=~/pkgmgr/bin
-#pkgfldr=~/pkgmgr
+#infldr=$HOME/pkgmgr/bin
+#pkgfldr=$HOME/pkgmgr
 #ARCHfldr=ARCH
 #repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
 #arch=i386
 
 #my config
-infldr=~/pkgmgr/bin
-pkgfldr=~/pkgmgr
+infldr=$HOME/pkgmgr/bin
+pkgfldr=$HOME/pkgmgr
 ARCHfldr=ARCH
 repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
 arch=i386
@@ -110,14 +110,14 @@ elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
       echo "Removing $2..."
       if [ -f $infldr/$2/.uninstall.sh ]; then
          chmod ugo+x $infldr/$2/.uninstall.sh
-         source $infldr/$2/.uninstall.sh
+         $infldr/$2/.uninstall.sh
       fi
       rm -rf $infldr/$2
       if [ -d $pkgfldr/src/$2 ]; then
          rm -rf $pkgfldr/src/$2
       fi
-      sed -i "/$(grep $2 $pkgfldr/index_$arch.db)/d" $pkgfldr/installed_$arch.db
-      sed -i "/$(grep $2 ~/.bashrc)/d" ~/.bashrc
+      sed -i "#$(grep $2 $pkgfldr/index_$arch.db)#d" $pkgfldr/installed_$arch.db
+      sed -i "#$(grep $2 $pkgfldr/.aliases.sh#/d" $pkgfldr/.aliases.sh
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"
@@ -151,8 +151,8 @@ elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; the
          fi
          echo "Installing $2..."
          if [ -f "$2" -o -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
-            if [ "$1" != "-ri" ]; then
-               echo "source $infldr/$2/.alias.sh" >> ~/.bashrc
+            if [ "$2" != "(grep $2 $pkgmgr/installed_$arch.db | cut -d: -f2)" ]; then
+               echo "source $infldr/$2/.alias.sh" >> $pkgfldr/.aliases.sh
             fi
             if [ ! -f "nofile" ]; then
                if [ -f "$2" ]; then
