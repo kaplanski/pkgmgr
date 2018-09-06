@@ -123,8 +123,8 @@ elif [ "$1" == "-r" -o "$1" == "--remove" ]; then
       if [ -d $pkgfldr/src/$2 ]; then
          rm -rf $pkgfldr/src/$2
       fi
-      sed -i "#$(grep $2 $pkgfldr/index_$arch.db)#d" $pkgfldr/installed_$arch.db
-      sed -i "#$(grep $2 $pkgfldr/.aliases.sh)#d" $pkgfldr/.aliases.sh
+      sed -i "s#$(grep $2 $pkgfldr/index_$arch.db)##g" $pkgfldr/installed_$arch.db
+      sed -i "s#$(grep $2 $pkgfldr/.aliases.sh)##g" $pkgfldr/.aliases.sh
       echo "Done!"
    else
       echo "Package $2 not installed! Aborted!"
