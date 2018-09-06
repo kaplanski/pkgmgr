@@ -22,18 +22,24 @@
 #pkgfldr=$HOME/pkgmgr
 #ARCHfldr=ARCH
 #repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
-#arch=i386
+#arch=
 
 #my config
 infldr=$HOME/pkgmgr/bin
 pkgfldr=$HOME/pkgmgr
 ARCHfldr=ARCH
 repo=https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/repo
-arch=i386
+arch=
 
-if [ "$infldr" == "" -o "$pkgfldr" == "" -o "$ARCHfldr" == "" -o "$repo" == "" -o "$arch" == "" ]; then
+if [ "$infldr" == "" -o "$pkgfldr" == "" -o "$ARCHfldr" == "" -o "$repo" == "" ]; then
    echo "Check config!"
    exit 42
+fi
+
+if [ "$arch" == "" -a "$1" != "-ca" ]; then
+   echo "Run '$0 -ca [arch]' to set your architecture!"
+   echo "Available architectures: i386, amd64, python2, python3"
+   exit 255
 fi
 
 if [ "$USER" == "root" ]; then
@@ -69,12 +75,12 @@ if [ ! -f $pkgfldr/.aliases.sh ]; then
    echo "Initial aliases file created!"
 fi
 
-if [ ! -f $pkgfldr/installed_$arch.db ]; then
+if [ ! -f $pkgfldr/installed_$arch.db -a "$1" != "-ca" ]; then
    echo "[PKGID:Name:Version]" > $pkgfldr/installed_$arch.db
    echo "Initial installed_$arch.db created!"
 fi
 
-if [ ! -f $pkgfldr/index_$arch.db ]; then
+if [ ! -f $pkgfldr/index_$arch.db -a "$1" != "-ca" ]; then
    echo "Initial package index download for $arch..."
    echo "Using online repo $repo"
    cd $pkgfldr && wget -q -t 1 $repo/$arch/index.db -O index_$arch.db
@@ -94,6 +100,7 @@ elif [ "$1" == "-h" ]; then
    echo "   -s [pkg]: searches for a package in the package index"
    echo "  -da: list all available packages for $arch"
    echo "  -di: list all installed packages for $arch"
+   echo "  -ca [arch]: change your architecture"
    echo "Current binary folder: $infldr"
    echo "Current pkgmgr folder: $pkgfldr"
    echo "Current architecture: $arch"
@@ -102,6 +109,28 @@ elif [ "$1" == "-u" ]; then
    echo "Using online repo $repo"
    cd $pkgfldr && wget -q -t 1 $repo/$arch/index.db -O index_$arch.db
    echo "Done!"
+elif [ "$1" == "-ca" ]; then
+   if [ "$2" == "i386" ]; then
+      echo "Set arch to i386!"
+      sed -i "32 s#arch=$arch#arch=i386#" $0
+      exit 1337
+   elif [ "$2" == "amd64" ]; then
+      echo "Set arch to amd64!"
+      sed -i "32 s#arch=$arch#arch=amd64#" $0
+      exit 1337
+   elif [ "$2" == "python2" ]; then
+      echo "Set arch to python2!"
+      sed -i "32 s#arch=$arch#arch=python2#" $0
+      exit 1337
+   elif [ "$2" == "python3" ]; then
+      echo "Set arch to python3!"
+      sed -i "32 s#arch=$arch#arch=python3#" $0
+      exit 1337
+   else
+      echo "Available architectures: i386, amd64, python2, python3"
+      echo "Unknown architecture!"
+      exit 255
+   fi
 elif [ "$1" == "-s" ]; then
    if [ "$2" == "" ]; then
       echo "Empty request!"
