@@ -135,14 +135,16 @@ elif [ "$1" == "-c" -o "$1" == "--clean" ]; then
    echo "Done!"
 elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; then
    prog=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f2)
-   if [ "$1" == "-i" -a "$2" == "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
-      echo "$2 is already installed! Aborting install..."
-      exit 2
-   elif [ "$1" == "-ri" -a "$2" != "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
-      echo "$2 is not installed! Aborting reinstall..."
-      exit 2
-   fi
-   if [ "$prog" != "" -a "$prog" == "$2" ]; then
+   if [ "$prog" != "" ]; then
+      if [ "$1" == "-i" -a "$2" == "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
+         echo "$2 is already installed! Aborting install..."
+         exit 2
+      elif [ "$1" == "-ri" -a "$2" != "$(grep $2 $pkgfldr/installed_$arch.db | cut -d: -f2)" ]; then
+         echo "$2 is not installed! Aborting reinstall..."
+         exit 2
+      else
+         echo "source $infldr/$2/.alias.sh" >> $pkgfldr/.aliases.sh
+      fi
       ver=$(grep $2 $pkgfldr/index_$arch.db | cut -d: -f3)
       ver="${ver%?}"
       if [ ! -f "$pkgfldr/$ARCHfldr/$2_v$ver.tgz" ]; then
@@ -161,9 +163,6 @@ elif [ "$1" == "-i" -o "$1" == "--install" -o "$1" == "-ri" -a "$2" != "" ]; the
          fi
          echo "Installing $2..."
          if [ -f "$2" -o -f "$2.bin" -o -f "$2.sh" -o -f "$2.py" ]; then
-            if [ "$2" != "(grep $2 $pkgmgr/installed_$arch.db | cut -d: -f2)" ]; then
-               echo "source $infldr/$2/.alias.sh" >> $pkgfldr/.aliases.sh
-            fi
             if [ ! -f "nofile" ]; then
                if [ -f "$2" ]; then
                   cp $2 $infldr/$2/$2
