@@ -12,7 +12,7 @@ dev: pkgmgr.sh (support dropped, present in i386 and amd64 repos)
 lite: pkgmgr-lite.sh  
 
 *Features:*
-- can install precompiled binary packages, .sh and .py scrips (tar-gz format)  
+- can install precompiled binary packages, .sh and .py scripts (tar-gz format)  
 - can install source-code using GNU make (tar-gz format, dev-version only)  
 - easy to adopt other formats/package layouts  
 - database of installed packages  
