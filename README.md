@@ -20,7 +20,8 @@ lite: pkgmgr-lite.sh
 
 *Known issues:*
 - no dependecy checks  
-- '-r' doesn't work properly (alias - need to restart bash to be loaded after install)  
+- aliases - need to restart bash to be loaded after install
+  - workaround: "reload-bashrc" alias (auto-created on first startup)  
 
 *Planned:*
 - [DONE] a lite version (dev-options and make removed, usable without root access)  

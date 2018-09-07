@@ -71,6 +71,7 @@ if [ ! -f $pkgfldr/.aliases.sh ]; then
    chmod ugo+x $pkgfldr/.aliases.sh
    if [ "$(grep $pkgfldr $HOME/.bashrc)" != "source $pkgfldr/.aliases.sh" ]; then
       echo "source $pkgfldr/.aliases.sh" >> $HOME/.bashrc
+      echo 'alias reload-bashrc="source $HOME/.bashrc"' >> $HOME/.bashrc
    fi
    echo "Initial aliases file created!"
 fi
