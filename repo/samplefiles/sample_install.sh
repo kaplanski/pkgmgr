@@ -28,5 +28,6 @@ if [ "$ver" == "lite" ]; then
    #echo 'echo "   2. APP"' >> $infldr/$pkgname/$pkgname.sh
    #echo 'echo "   3. APP"' >> $infldr/$pkgname/$pkgname.sh
    #just add your apps to this list
+   chmod ugo+x $infldr/$pkgname/$pkgname.sh
 fi
 echo "Done!"
