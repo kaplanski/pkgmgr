@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 arch=${1%/}
 ID_cnt=1
 if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" == "python3" ]; then

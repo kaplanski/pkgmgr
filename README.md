@@ -8,7 +8,7 @@ wget https://gitup.uni-potsdam.de/kaplanski/pkgmgr/raw/master/pkgmgr-lite.sh
 chmod ugo+x pkgmgr-lite.sh
 
 *Versions:*  
-dev: pkgmgr.sh (support dropped, present in i386 and amd64 repos)  
+full: pkgmgr.sh (support dropped, present in i386 repo)  
 lite: pkgmgr-lite.sh  
 
 *Features:*
@@ -40,7 +40,13 @@ lite: pkgmgr-lite.sh
     called "nofile" ([packagename]_install.sh is REQUIRED)
 - OPTIONAL: nofile
 - OPTIONAL: testbinary_display.txt (Message to be shown after install has completed)  
-- OPTIONAL: testbinary_install.sh (install instructions; REQUIRED if "nofile" is present)
-- OPTIONAL: anything named in _install.sh (like src)
+- OPTIONAL: testbinary_install.sh (install instructions; REQUIRED if "nofile" is present)  
+- OPTIONAL: anything named in _install.sh (like src)  
+
+*WIP Content:*
+- package format and handling will be reworked to not use aliases anymore  
+- database handling  
+- python2 and C ports of pkgmgr-lite  
+  - the c port will enventually replace pkgmgr-lite.sh  
 
 **This project has tee-making abilities!**

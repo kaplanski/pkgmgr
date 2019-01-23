@@ -1,9 +1,10 @@
-echo ""
+#!/usr/bin/env bash
+echo
 ./build-index-db.sh i386
-echo ""
+echo
 ./build-index-db.sh amd64
-echo ""
+echo
 ./build-index-db.sh python2
-echo ""
+echo
 ./build-index-db.sh python3
-echo ""
+echo
