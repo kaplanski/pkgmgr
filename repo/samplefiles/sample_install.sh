@@ -16,9 +16,12 @@ fi
 echo "Installing $pkgname..."
 cp * "$infldr/$pkgname"
 
-#if [ "$ver" == "lite" ]; then
-#   echo "alias [name]=$infldr/$pkgname/[file]" >> $infldr/$pkgname/.alias.sh
-#   chmod ugo+x $infldr/$pkgname/.alias.sh
-#   echo "unalias [name]" >> $infldr/$pkgname/.uninstall.sh
-#fi
+if [ "$ver" == "lite" ]; then
+   echo '#!/usr/bin/env bash' > $infldr/$pkgname/$pkgname.sh
+   echo 'echo "Choose an application:"' >> $infldr/$pkgname/$pkgname.sh
+   #echo 'echo "   1. APP"' >> $infldr/$pkgname/$pkgname.sh
+   #echo 'echo "   2. APP"' >> $infldr/$pkgname/$pkgname.sh
+   #echo 'echo "   3. APP"' >> $infldr/$pkgname/$pkgname.sh
+   #just add your apps to this list
+fi
 echo "Done!"
