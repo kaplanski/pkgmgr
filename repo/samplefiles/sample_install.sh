@@ -5,7 +5,12 @@
 pkgfldr=$1
 infldr=$2
 pkgname=$3
-ver=$4
+
+if [ "$4" == "" ]; then
+   ver="lite"
+else
+   ver=$4
+fi
 
 if [ ! -d "$infldr/$pkgname" ]; then
    echo "Initial creation of $pkgfldr/$pkgname!"
