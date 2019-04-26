@@ -12,6 +12,8 @@ if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" 
          rm -rf "$dir"
       else
          echo "  nothing to build..."
+         echo "Done for $arch!"
+         exit 1
       fi
    done
 
