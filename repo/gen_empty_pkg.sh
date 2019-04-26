@@ -10,9 +10,9 @@ if [ "$1" != "" -a "$2" != "" -a "$3" != "" ]; then
       echo "standard display file for $2" > $2_display.txt
       echo "  Creating $2_install.sh..."
       cp ../../samplefiles/sample_install.sh $2_install.sh
-      echo "  Creating nofile..."
-      echo "  (remove 'nofile' manually if binary/script is called $2[.bin/.sh/.py])"
-      touch nofile
+      #echo "  Creating nofile..." #depreciated
+      #echo "  (remove 'nofile' manually if binary/script is called $2[.bin/.sh/.py])"
+      #touch nofile
       echo "Done for $arch!"
    else
       echo "Unknown architecture!"
