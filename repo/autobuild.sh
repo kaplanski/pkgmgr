@@ -8,3 +8,5 @@ echo
 echo
 ./build-index-db.sh python3
 echo
+./build-index-db.sh noarch
+echo

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 arch=${1%/}
 ID_cnt=1
-if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" == "python3" ]; then
+if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" == "python3" -o "$arch" == "noarch" ]; then
    echo "Running for $arch:"
    cd "$arch"
    for dir in */; do
