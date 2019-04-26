@@ -18,7 +18,7 @@ if [ ! -d "$infldr/$pkgname" ]; then
    echo "Done!"
 fi
 
-echo "Installing $pkgname..."
+#echo "Installing $pkgname..." #depreciated
 cp * "$infldr/$pkgname"
 
 if [ "$ver" == "lite" ]; then
@@ -41,4 +41,4 @@ if [ "$ver" == "lite" ]; then
    echo 'fi' >> $infldr/$pkgname/$pkgname.sh
    chmod ugo+x $infldr/$pkgname/$pkgname.sh
 fi
-echo "Done!"
+#echo "Done!" depreciated

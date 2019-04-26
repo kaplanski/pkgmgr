@@ -2,6 +2,8 @@ pkgfldr=$1
 infldr=$2
 pkgname=$3
 
+echo
+
 if [ ! -d "$pkgfldr/src" ]; then
    echo "Initial creation of $pkgfldr/src!"
    mkdir "$pkgfldr/src"
