@@ -1,2 +1,3 @@
 [ID:Name:Version]
-{1:pkgmgr-bash:0.1c-noarch}
+{1:pkgmgr-bash-lite:0.1c-noarch}
+{2:pkgmgr-bash:0.1c-noarch}

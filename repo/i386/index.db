@@ -1,4 +1,5 @@
 [ID:Name:Version]
-{1:pkgmgr-bash:0.1c-i386}
-{2:pkgmgr:0-git-bleeding-edge}
-{3:testbinary:0.1}
+{1:pkgmgr-bash-lite:0.1c-i386}
+{2:pkgmgr-bash:0.1c-i386}
+{3:pkgmgr:0-git-bleeding-edge}
+{4:testbinary:0.1}
