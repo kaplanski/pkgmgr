@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 arch=${1%/}
-ID_cnt=1
-if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" == "python3" -o "$arch" == "noarch" ]; then
+if [ "$arch" == "stable" ]; then
    echo "Running for $arch:"
    cd "$arch"
    for dir in */; do
@@ -22,13 +21,19 @@ if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" 
       rm index.db
    fi
 
-   echo "[ID:Name:Version]" >> index.db
+   if [ ! -f "index.db" ]; then
+      ID_cnt=1
+      echo "[ID:Name:Version:Dependencies]" >> index.db
+   else
+      ID_cnt=$(( $(tail -n 1 "index.db" | cut -d ":" -f 1 | cut -d "{" -f 2) + 1 ))
+   fi
 
    for f in *_v*.tgz; do
       if [ "$f" != "*_v*.tgz" ]; then
          p_ver="${f#*_v}"
          ver="${p_ver%.tgz}"
-         echo "{$ID_cnt:${f%_v*}:$ver}" >> index.db 2>/dev/null
+         echo "Enter dependencies for ${f%_v*} (or leave blank; delim: ,) [ENTER]:"; read deps
+         echo "{$ID_cnt:${f%_v*}:$ver:$deps}" >> index.db 2>/dev/null
          ID_cnt=$(($ID_cnt + 1))
       fi
    done

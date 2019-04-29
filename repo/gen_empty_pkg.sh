@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$1" != "" -a "$2" != "" -a "$3" != "" ]; then
    arch=${1%/}
-   if [ "$arch" == "i386" -o "$arch" == "amd64" -o "$arch" == "python2" -o "$arch" == "python3" -o "$arch" == "noarch" ]; then
+   if [ "$arch" == "stable" ]; then
       echo "Running for $arch:"
       cd "$arch"
       echo "  Creating $2_v$3 folder..."
