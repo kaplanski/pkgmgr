@@ -5,3 +5,4 @@
 {4:pkgmgr:1.0:}
 {5:utpy-extras:0.1:python2}
 {6:utpy-tools:0.1:python2}
+{7:nano:4.2-src:make,gcc}
