@@ -3,5 +3,5 @@
 {2:pkgmgr-bash-lite:0.1c:bash,wget,grep,sed,cut}
 {3:pkgmgr-bash:0.1c:bash,wget,grep,sed,cut,make}
 {4:pkgmgr:1.0:}
-{5:utpy-extras:0.1:python2,utpy-tools}
+{5:utpy-extras:0.1:python2}
 {6:utpy-tools:0.1:python2}

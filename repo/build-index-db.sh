@@ -28,6 +28,9 @@ if [ "$arch" == "stable" ]; then
          echo "Enter dependencies for ${dir%_v*} (or leave blank; delim: ,) [ENTER]:"; read deps
          echo "{$ID_cnt:${dir%_v*}:$ver:$deps}" >> index.db 2>/dev/null
          ID_cnt=$(($ID_cnt + 1))
+
+         #hashing
+         ../hashme "${base}.tgz" > "${base}.sha3"
       else
          echo "  nothing to build..."
          echo "Done for $arch!"
