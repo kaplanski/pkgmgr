@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 arch=${1%/}
 
-if [ "$arch" == "stable" ]; then
+if [ "$arch" == "stable" -o "$arch" == "lnx-bin" ]; then
 
    echo "Running for $arch:"
    cd "$arch"
