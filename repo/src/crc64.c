@@ -29,7 +29,6 @@ void crc64(char *tohash, long length){
 }
 
 int main(int argc, char *argv[]){
- int fd = -1;
  char * tohash = 0;
  long length;
 
