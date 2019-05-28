@@ -30,9 +30,9 @@ if [ "$arch" == "stable" -o "$arch" == "lnx-bin" ]; then
          ID_cnt=$(($ID_cnt + 1))
 
          #hashing
-         #echo "Hashing package..."
-         #../hashme "${base}.tgz" > "${base}.sha3"
-         #echo "Done hashing!"
+         echo "Hashing package..."
+         ../crc64 "${base}.tgz" > "${base}.crc"
+         echo "Done hashing!"
       else
          echo "  nothing to build..."
          echo "Done for $arch!"
