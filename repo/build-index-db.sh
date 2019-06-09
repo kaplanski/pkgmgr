@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 arch=${1%/}
 
+os="$(uname -s)"
+
+if [ "$os" == "Linux" ]; then
+   CRC="../crc64-lnx"
+elif [ "$os" == "Darwin" ]; then
+   CRC="../crc64-mac"
+fi
+
 if [ "$arch" == "stable" -o "$arch" == "lnx-bin" ]; then
 
    echo "Running for $arch:"
@@ -31,7 +39,7 @@ if [ "$arch" == "stable" -o "$arch" == "lnx-bin" ]; then
 
          #hashing
          echo "Hashing package..."
-         ../crc64 "${base}.tgz" > "${base}.crc"
+         $CRC "${base}.tgz" > "${base}.crc"
          echo "Done hashing!"
       else
          echo "  nothing to build..."

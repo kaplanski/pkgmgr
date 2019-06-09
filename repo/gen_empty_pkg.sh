@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$1" != "" -a "$2" != "" -a "$3" != "" ]; then
    arch=${1%/}
-   if [ "$arch" == "stable" ]; then
+   if [ "$arch" == "stable" -o "$arch" == "lnx-bin" ]; then
       echo "Running for $arch:"
       cd "$arch"
       echo "  Creating $2_v$3 folder..."
