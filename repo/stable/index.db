@@ -1,5 +1,5 @@
 [ID:Name:Version:Dependencies]
-{1:dbisshit:0.1b-git-release:python2}
+{1:dbisshit:0.1b-git-release:python2,wget}
 {2:pkgmgr-bash-lite:0.1c:bash,wget,grep,sed,cut}
 {3:pkgmgr-bash:0.1c:bash,wget,grep,sed,cut,make}
 {4:pkgmgr:1.0:}

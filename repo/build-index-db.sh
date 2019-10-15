@@ -7,6 +7,9 @@ if [ "$os" == "Linux" ]; then
    CRC="../crc64-lnx"
 elif [ "$os" == "Darwin" ]; then
    CRC="../crc64-mac"
+else
+   echo "No linux or mac detected, unable to hash. Exiting..."
+   exit 15
 fi
 
 if [ "$arch" == "stable" -o "$arch" == "lnx-bin" ]; then
