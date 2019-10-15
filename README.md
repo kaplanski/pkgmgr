@@ -1,6 +1,6 @@
 # pkgmgr - a lightweight package manager  
   
-**pkgmgr** is available at: https://gitup.uni-potsdam.de/kaplanski/cpkgmgr  
+**pkgmgr** is available at: https://github.com/kaplanski/cpkgmgr  
   
 This page currently acts as the repo host.  
 Previously the early proof-of-concept bash and  
