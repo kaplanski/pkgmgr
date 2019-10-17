@@ -12,7 +12,7 @@ else
    exit 15
 fi
 
-if [ "$arch" == "stable" -o "$arch" == "lnx-bin" ]; then
+if [ "$arch" == "stable" -o "$arch" == "lnx-bin" -o "$arch" == "rpi-bin" -o "$arch" == "freebsd11-bin" ]; then
 
    echo "Running for $arch:"
    cd "$arch"
