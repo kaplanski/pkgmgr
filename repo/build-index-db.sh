@@ -6,13 +6,13 @@ os="$(uname -s)"
 if [ "$os" == "Linux" ]; then
    CRC="../crc64-lnx"
 elif [ "$os" == "Darwin" ]; then
-   CRC="../crc64-mac"
+   CRC="../crc64-mac-intel"
 else
    echo "No linux or mac detected, unable to hash. Exiting..."
    exit 15
 fi
 
-if [ "$arch" == "stable" -o "$arch" == "lnx-bin" -o "$arch" == "rpi-bin" -o "$arch" == "freebsd11-bin" ]; then
+if [ "$arch" == "stable" -o "$arch" == "lnx-bin" ]; then
 
    echo "Running for $arch:"
    cd "$arch"

@@ -1,7 +1,7 @@
 /*
- a fast non-cryptographic hash using then crc64-iso
+ a fast non-cryptographic hash using the crc64-iso
  polynome x^64 + x^4 + x^3 + x + 1 bytewise
- Copyright (c) 2019 Jan-Daniel Kaplanski
+ Copyright (c) 2019-present Jan-Daniel Kaplanski
  MIT/X11 LICENSE
 */
 
@@ -14,7 +14,7 @@
 
 void crc64(char *tohash, long length){
  int i=0;
- unsigned long long x64=0, x4=0,x3=0, num=0, buf=0, rval=0;
+ unsigned long long x64=0, x4=0, x3=0, num=0, buf=0, rval=0;
 
  for(i=0;i<length;i++)
   {
